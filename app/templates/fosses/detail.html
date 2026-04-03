@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Fosse #{{ fosse.id }} — GBV{% endblock %}
+{% block page_title %}Fosse septique #{{ fosse.id }}{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="form-card">
+      <h5 class="mb-3"><i class="bi bi-circle-square me-2 text-success"></i>Fosse #{{ fosse.id }}</h5>
+      <dl class="row mb-0">
+        <dt class="col-6 text-muted">Longueur</dt><dd class="col-6">{{ fosse.longueur_p or '—' }} m</dd>
+        <dt class="col-6 text-muted">Largeur</dt><dd class="col-6">{{ fosse.largeur_f or '—' }} m</dd>
+        <dt class="col-6 text-muted">Volume</dt><dd class="col-6 fw-bold text-success">{{ fosse.volume_theorique or '—' }} m²</dd>
+      </dl>
+      <hr>
+      <a href="{{ url_for('fosses.modifier', id=fosse.id) }}" class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil me-1"></i>Modifier</a>
+      <a href="{{ url_for('fosses.index') }}" class="btn btn-outline-secondary btn-sm">Retour</a>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <!-- Ménages concernés -->
+    <div class="card table-card mb-3">
+      <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-house me-2 text-success"></i>Ménages concernés</span>
+        <form method="post" action="{{ url_for('fosses.ajouter_menage', fosse_id=fosse.id, menage_id=0) }}" id="addMenageForm" class="d-flex gap-2">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <select name="menage_id" class="form-select form-select-sm" style="width:160px" id="menageSel">
+            <option value="">— Choisir —</option>
+            {% for m in menages_dispo %}
+            <option value="{{ m.id }}">#{{ m.id }} {{ m.contact or '' }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-sm btn-success" type="button"
+            onclick="let v=document.getElementById('menageSel').value;if(v){document.getElementById('addMenageForm').action='{{ url_for('fosses.ajouter_menage', fosse_id=fosse.id, menage_id=0) }}'.replace('/0','/'+v);document.getElementById('addMenageForm').submit();}">
+            <i class="bi bi-plus-lg"></i>
+          </button>
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>#</th><th>Contact</th><th>Email</th><th>Commune</th></tr></thead>
+          <tbody>
+            {% for m in fosse.menages %}
+            <tr><td>{{ m.id }}</td><td>{{ m.contact or '—' }}</td><td>{{ m.email or '—' }}</td><td>{{ m.commune.libelle_c }}</td></tr>
+            {% else %}<tr><td colspan="4" class="text-muted text-center py-2">Aucun ménage.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Stations déversant -->
+    <div class="card table-card">
+      <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-building me-2 text-primary"></i>Stations associées (DÉVERSER)</span>
+        <form method="post" action="{{ url_for('fosses.ajouter_station', fosse_id=fosse.id, station_id=0) }}" id="addStationForm" class="d-flex gap-2">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <select name="station_id" class="form-select form-select-sm" style="width:200px" id="stationSel">
+            <option value="">— Choisir —</option>
+            {% for s in stations_dispo %}
+            <option value="{{ s.id }}">{{ s.libelle_statio }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-sm btn-primary" type="button"
+            onclick="let v=document.getElementById('stationSel').value;if(v){document.getElementById('addStationForm').action='{{ url_for('fosses.ajouter_station', fosse_id=fosse.id, station_id=0) }}'.replace('/0','/'+v);document.getElementById('addStationForm').submit();}">
+            <i class="bi bi-plus-lg"></i>
+          </button>
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>#</th><th>Libellé</th><th>Traitement</th><th>Commune</th></tr></thead>
+          <tbody>
+            {% for s in fosse.stations %}
+            <tr><td>{{ s.id }}</td><td>{{ s.libelle_statio }}</td><td>{{ s.traitement or '—' }}</td><td>{{ s.commune.libelle_c }}</td></tr>
+            {% else %}<tr><td colspan="4" class="text-muted text-center py-2">Aucune station.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

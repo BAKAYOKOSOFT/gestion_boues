@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_macros.html" import render_field %}
+{% block title %}{{ titre }} — GBV{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-5">
+  <div class="form-card">
+    <h5 class="mb-4"><i class="bi bi-circle-square me-2 text-success"></i>{{ titre }}</h5>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="col-6">{{ render_field(form.longueur_p, placeholder="Ex: 3.0") }}</div>
+        <div class="col-6">{{ render_field(form.largeur_f, placeholder="Ex: 2.5") }}</div>
+      </div>
+      <hr>
+      <div class="d-flex gap-2">
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('fosses.index') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div></div>
+{% endblock %}

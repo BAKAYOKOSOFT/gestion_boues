@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "_macros.html" import render_field %}
+{% block title %}{{ titre }} — GBV{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7">
+  <div class="form-card">
+    <h5 class="mb-4"><i class="bi bi-building me-2 text-success"></i>{{ titre }}</h5>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      {{ render_field(form.libelle_statio, placeholder="Nom de la station") }}
+      <div class="row">
+        <div class="col-6">{{ render_field(form.traitement, placeholder="Ex: Lagunage, Biofilm") }}</div>
+        <div class="col-6">{{ render_field(form.lots, placeholder="Nombre de lots") }}</div>
+      </div>
+      {{ render_field(form.commune_id) }}
+      {{ render_field(form.description_s, placeholder="Description de la station...") }}
+      {{ render_field(form.logs, placeholder="Logs...") }}
+      <hr>
+      <div class="d-flex gap-2">
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('stations.index') }}" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div></div>
+{% endblock %}

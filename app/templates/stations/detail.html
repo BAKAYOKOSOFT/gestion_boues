@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Station {{ station.libelle_statio }} — GBV{% endblock %}
+{% block page_title %}Détail station{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-5">
+    <div class="form-card h-100">
+      <h5 class="mb-3"><i class="bi bi-building me-2 text-success"></i>{{ station.libelle_statio }}</h5>
+      <dl class="row mb-0">
+        <dt class="col-5 text-muted">Commune</dt><dd class="col-7">{{ station.commune.libelle_c }}</dd>
+        <dt class="col-5 text-muted">Traitement</dt><dd class="col-7">{{ station.traitement or '—' }}</dd>
+        <dt class="col-5 text-muted">Lots</dt><dd class="col-7">{{ station.lots or '—' }}</dd>
+        <dt class="col-5 text-muted">Description</dt><dd class="col-7">{{ station.description_s or '—' }}</dd>
+      </dl>
+      <hr>
+      <a href="{{ url_for('stations.modifier', id=station.id) }}" class="btn btn-primary btn-sm me-2">
+        <i class="bi bi-pencil me-1"></i>Modifier
+      </a>
+      <a href="{{ url_for('stations.index') }}" class="btn btn-outline-secondary btn-sm">Retour</a>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <div class="card table-card">
+      <div class="card-header bg-white py-3 fw-semibold">
+        <i class="bi bi-circle-square me-2 text-success"></i>Fosses septiques liées ({{ station.fosses|list|length }})
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>#</th><th>Longueur (m)</th><th>Largeur (m)</th><th>Volume (m²)</th></tr></thead>
+          <tbody>
+            {% for f in station.fosses %}
+            <tr>
+              <td><a href="{{ url_for('fosses.detail', id=f.id) }}" class="text-success">#{{ f.id }}</a></td>
+              <td>{{ f.longueur_p or '—' }}</td><td>{{ f.largeur_f or '—' }}</td>
+              <td>{{ f.volume_theorique or '—' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-muted text-center py-3">Aucune fosse associée.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

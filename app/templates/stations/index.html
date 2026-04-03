@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Stations de traitement — GBV{% endblock %}
+{% block page_title %}Stations de traitement{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0"><i class="bi bi-building me-2 text-success"></i>Stations de traitement</h5>
+  <a href="{{ url_for('stations.nouveau') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Nouveau</a>
+</div>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>ID</th><th>Libellé</th><th>Traitement</th><th>Lots</th><th>Commune</th><th>Fosses liées</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for s in stations %}
+        <tr>
+          <td>{{ s.id }}</td>
+          <td class="fw-semibold"><a href="{{ url_for('stations.detail', id=s.id) }}" class="text-success">{{ s.libelle_statio }}</a></td>
+          <td>{{ s.traitement or '—' }}</td><td>{{ s.lots or '—' }}</td>
+          <td>{{ s.commune.libelle_c }}</td>
+          <td><span class="badge bg-secondary">{{ s.fosses|list|length }}</span></td>
+          <td>
+            <a href="{{ url_for('stations.modifier', id=s.id) }}" class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="{{ url_for('stations.supprimer', id=s.id) }}" class="d-inline" onsubmit="return confirm('Confirmer ?')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">Aucune station. <a href="{{ url_for('stations.nouveau') }}">Ajouter.</a></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
